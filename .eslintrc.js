@@ -17,6 +17,7 @@ module.exports = {
   rules: {
     "import/no-named-as-default": "off", // Disable 'import/no-named-as-default' rule
     "arrow-body-style": ["error", "as-needed"], // Change 'as-needed' to 'block'
+    "import/extensions": ["never"],
     "max-classes-per-file": "off",
     "no-underscore-dangle": "off",
     "no-console": "off",
