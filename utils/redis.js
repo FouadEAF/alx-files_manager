@@ -1,10 +1,13 @@
-import redis from 'redis';
-import { promisify } from 'util';
+const redis = require('redis');
+const { promisify } = require('util');
 
 /**
- * Class for performing operations with Redis service
+ * RedisClient - Class for performing operations with Redis service
  */
 class RedisClient {
+  /**
+   * Creates an instance of RedisClient.
+   */
   constructor() {
     this.client = redis.createClient();
     this.getAsync = promisify(this.client.get).bind(this.client);
@@ -17,17 +20,17 @@ class RedisClient {
   }
 
   /**
-   * Check if connection to Redis is Alive
-   * @return true if connection alive or false if not
+   * Check if connection to Redis is alive.
+   * @returns {boolean} True if connection is alive, false otherwise.
    */
   isAlive() {
     return this.client.connected;
   }
 
   /**
-   * get value corresponding to key in redis
-   * @key {string} key to search for in redis
-   * @return {string} value of key
+   * Get the value corresponding to the key in Redis.
+   * @param {string} key - The key to search for in Redis.
+   * @returns {Promise<string>} The value associated with the key.
    */
   async get(key) {
     const value = await this.getAsync(key);
@@ -35,25 +38,25 @@ class RedisClient {
   }
 
   /**
-   * Create a new key in redis with a specific TTL
-   * @key {string} key to be saved in redis
-   * @value {string} value to be asigned to key
-   * @duration {number} TTL of key
-   * @return {undefined}  No return
+   * Create a new key in Redis with a specific TTL.
+   * @param {string} key - The key to be saved in Redis.
+   * @param {string} value - The value to be assigned to the key.
+   * @param {number} duration - The TTL of the key.
+   * @returns {undefined} No return value.
    */
   async set(key, value, duration) {
     this.client.setex(key, duration, value);
   }
 
   /**
-   * Delete key in redis service
-   * @key {string} key to be deleted
-   * @return {undefined} No return
+   * Delete a key from the Redis service.
+   * @param {string} key - The key to be deleted.
+   * @returns {undefined} No return value.
    */
   async del(key) {
     this.client.del(key);
   }
 }
 
-const redisClient = RedisClient();
+const redisClient = new RedisClient();
 module.exports = redisClient;
