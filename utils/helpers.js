@@ -8,7 +8,7 @@ async function getAuthToken(request) {
 
 // checks authentication against verified information
 // returns userId of user
-async function findUserIdByToken(request) {
+export async function findUserIdByToken(request) {
   const key = await getAuthToken(request);
   const userId = await redisClient.get(key);
   return userId || null;
@@ -16,11 +16,9 @@ async function findUserIdByToken(request) {
 
 // Get user by userId
 // Returns exactly the first user found
-async function findUserById(userId) {
+export async function findUserById(userId) {
   const userExistsArray = await dbClient.users
     .find(`ObjectId("${userId}")`)
     .toArray();
   return userExistsArray[0] || null;
 }
-
-export { findUserIdByToken, findUserById };
