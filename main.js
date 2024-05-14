@@ -1,6 +1,6 @@
 import dbClient from "./utils/db";
 
-function waitConnection() {
+const waitConnection = () => {
   return new Promise((resolve, reject) => {
     let i = 0;
     const repeatFct = async () => {
@@ -8,7 +8,6 @@ function waitConnection() {
         i += 1;
         if (i >= 10) {
           reject();
-          //   resolve();
         } else if (!dbClient.isAlive()) {
           repeatFct();
         } else {
@@ -18,20 +17,12 @@ function waitConnection() {
     };
     repeatFct();
   });
-}
+};
 
 (async () => {
-  try {
-    console.log(dbClient.isAlive());
-    await waitConnection();
-    console.log(dbClient.isAlive());
-    console.log(await dbClient.nbUsers());
-    console.log(await dbClient.nbFiles());
-  } catch (error) {
-    console.log("Connection error");
-  }
+  console.log(dbClient.isAlive());
+  await waitConnection();
+  console.log(dbClient.isAlive());
+  console.log(await dbClient.nbUsers());
+  console.log(await dbClient.nbFiles());
 })();
-const teshconnextion = async () => {
-  console.log(await dbClient.isAlive());
-};
-teshconnextion();
