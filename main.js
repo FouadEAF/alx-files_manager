@@ -31,3 +31,7 @@ function waitConnection() {
     console.log("Connection error");
   }
 })();
+const teshconnextion = async () => {
+  console.log(await dbClient.isAlive());
+};
+teshconnextion();

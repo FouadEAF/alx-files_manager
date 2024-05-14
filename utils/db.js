@@ -1,30 +1,37 @@
-import mongodb from "mongodb";
+import { MongoClient } from "mongodb";
 
 require("dotenv").config();
 
 /**
  * Represents a MongoDB client.
  */
-class DBClient {
-  /**
-   * Creates a new DBClient instance.
-   */
-  constructor() {
-    const host = process.env.DB_HOST || "localhost";
-    const port = process.env.DB_PORT || 27017;
-    const database = process.env.DB_DATABASE || "files_manager";
-    const dbURL = `mongodb://${host}:${port}/${database}`;
 
-    this.client = new mongodb.MongoClient(dbURL, { useUnifiedTopology: true });
-    this.client.connect();
+// const uriLocal = "mongodb://localhost:27017";
+const host = process.env.DB_HOST || "localhost";
+const port = process.env.DB_PORT || 27017;
+const database = process.env.DB_DATABASE || "files_manager";
+const url = `mongodb://${host}:${port}/`;
+
+class DBClient {
+  constructor() {
+    this.db = null;
+    this.client = false; // Initialize client property
+
+    MongoClient.connect(url, { useUnifiedTopology: true }, (error, client) => {
+      if (error) {
+        console.error("Error connecting to MongoDB:", error);
+      } else {
+        console.log("Connected to MongoDB");
+        this.client = client; // Assign client when connected
+        this.db = client.db(database);
+        this.db.createCollection("users");
+        this.db.createCollection("files");
+      }
+    });
   }
 
-  /**
-   * Checks if this client's connection to the MongoDB server is active.
-   * @returns {boolean}
-   */
   isAlive() {
-    return this.client.isConnected();
+    return this.client && this.client.isConnected();
   }
 
   /**
